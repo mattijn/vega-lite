@@ -50,6 +50,13 @@ export const SCALE_BINDINGS_CONTINUOUS =
 
 export const NO_INIT_SCALE_BINDINGS = 'Selections bound to scales cannot be separately initialized.';
 
+export function noSameUnitLookup(name: string) {
+  return (
+    `Cannot define and lookup the "${name}" selection in the same view. ` +
+    `Try moving the lookup into a second, layered view?`
+  );
+}
+
 // REPEAT
 export function noSuchRepeatedValue(field: string) {
   return `Unknown repeated value "${field}".`;
