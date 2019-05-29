@@ -20,7 +20,10 @@ import {
   SortField as VgSortField,
   TextBaseline as VgTextBaseline,
   Title as VgTitle,
-  UnionSortField as VgUnionSortField
+  UnionSortField as VgUnionSortField,
+  ScaledValueRef,
+  NumericValueRef,
+  ColorValueRef
 } from 'vega';
 import {isArray} from 'vega-util';
 import {BaseBin} from './bin';
@@ -32,6 +35,10 @@ import {WindowOnlyOp} from './transform';
 import {Flag, keys} from './util';
 
 export {VgSortField, VgUnionSortField, VgCompare, VgTitle, LayoutAlign, ProjectionType, VgExprRef};
+
+export type OmitValueRef<T> = {
+  [P in keyof T]?: Exclude<Exclude<Exclude<T[P], ScaledValueRef<any>>, NumericValueRef>, ColorValueRef>
+};
 
 export interface VgData {
   name: string;
