@@ -5,13 +5,14 @@ import {forEachSelection, MODIFY, SELECTION_DOMAIN, STORE, unitName, VL_SELECTIO
 import {dateTimeExpr, isDateTime} from '../../datetime';
 import {warn} from '../../log';
 import {SelectionInit, SelectionInitInterval} from '../../selection';
-import {accessPathWithDatum, keys, varName} from '../../util';
+import {keys, varName} from '../../util';
 import {VgData} from '../../vega.schema';
 import {FacetModel} from '../facet';
 import {LayerModel} from '../layer';
 import {isUnitModel, Model} from '../model';
 import {UnitModel} from '../unit';
 import {forEachTransform} from './transforms/transforms';
+import {parseSelectionBinExtent} from './parse';
 
 export function assembleInit(
   init: (SelectionInit | SelectionInit[] | SelectionInitInterval)[] | SelectionInit,
@@ -167,37 +168,13 @@ export function assembleLayerSelectionMarks(model: LayerModel, marks: any[]): an
 export function assembleSelectionScaleDomain(model: Model, domainRaw: SignalRef): SignalRef {
   const selDomain = JSON.parse(domainRaw.signal.replace(SELECTION_DOMAIN, ''));
   const name = varName(selDomain.selection);
-  const encoding = selDomain.encoding;
-  let field = selDomain.field;
 
   let selCmpt = model.component.selection && model.component.selection[name];
   if (selCmpt) {
     warn('Use "bind": "scales" to setup a binding for scales and selections within the same view.');
   } else {
     selCmpt = model.getSelectionComponent(name, selDomain.selection);
-    if (!encoding && !field) {
-      field = selCmpt.project.items[0].field;
-      if (selCmpt.project.items.length > 1) {
-        warn(
-          'A "field" or "encoding" must be specified when using a selection as a scale domain. ' +
-            `Using "field": ${stringValue(field)}.`
-        );
-      }
-    } else if (encoding && !field) {
-      const encodings = selCmpt.project.items.filter(p => p.channel === encoding);
-      if (!encodings.length || encodings.length > 1) {
-        field = selCmpt.project.items[0].field;
-        warn(
-          (!encodings.length ? 'No ' : 'Multiple ') +
-            `matching ${stringValue(encoding)} encoding found for selection ${stringValue(selDomain.selection)}. ` +
-            `Using "field": ${stringValue(field)}.`
-        );
-      } else {
-        field = encodings[0].field;
-      }
-    }
-
-    return {signal: accessPathWithDatum(field, name)};
+    return {signal: parseSelectionBinExtent(selCmpt, selDomain)};
   }
 
   return {signal: 'null'};
