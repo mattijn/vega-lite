@@ -1,6 +1,7 @@
 import {
   AggregateOp,
   Align,
+  BinTransform as VgBinTransform,
   Color,
   Compare as VgCompare,
   ExprRef as VgExprRef,
@@ -23,7 +24,6 @@ import {
   UnionSortField as VgUnionSortField
 } from 'vega';
 import {isArray} from 'vega-util';
-import {BaseBin} from './bin';
 import {Gradient, ValueOrGradient} from './channeldef';
 import {NiceTime, ScaleType} from './scale';
 import {SortOrder} from './sort';
@@ -325,15 +325,6 @@ export type VgEncodeEntry = {[k in VgEncodeChannel]?: VgValueRef | (VgValueRef &
 //   color?: VgValueRef<string>
 //  ...
 // }
-
-export interface VgBinTransform extends BaseBin {
-  type: 'bin';
-  extent?: number[] | {signal: string};
-  rawExtent?: {signal: string};
-  field: string;
-  as: string[];
-  signal?: string;
-}
 
 export interface VgExtentTransform {
   type: 'extent';
