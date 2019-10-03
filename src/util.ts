@@ -2,7 +2,7 @@ import 'array-flat-polyfill';
 import {default as clone_} from 'clone';
 import deepEqual_ from 'fast-deep-equal';
 import stableStringify from 'fast-json-stable-stringify';
-import {hasOwnProperty, isArray, isNumber, isString, splitAccessPath, stringValue} from 'vega-util';
+import {hasOwnProperty, isNumber, isString, splitAccessPath, stringValue} from 'vega-util';
 import {isLogicalAnd, isLogicalNot, isLogicalOr, LogicalOperand} from './logical';
 
 export const deepEqual = deepEqual_;
@@ -125,45 +125,6 @@ export function fill<T>(val: T, len: number) {
     arr[i] = val;
   }
   return arr;
-}
-
-/**
- * Like TS Partial but applies recursively to all properties.
- */
-export type DeepPartial<T> = {[P in keyof T]?: DeepPartial<T[P]>};
-
-/**
- * recursively merges src into dest
- */
-export function mergeDeep<T>(dest: T, ...src: DeepPartial<T>[]): T {
-  for (const s of src) {
-    dest = deepMerge_(dest, s);
-  }
-  return dest;
-}
-
-// recursively merges src into dest
-function deepMerge_(dest: any, src: any) {
-  if (typeof src !== 'object' || src === null) {
-    return dest;
-  }
-
-  for (const p in src) {
-    if (!hasOwnProperty(src, p)) {
-      continue;
-    }
-    if (src[p] === undefined) {
-      continue;
-    }
-    if (typeof src[p] !== 'object' || isArray(src[p]) || src[p] === null) {
-      dest[p] = src[p];
-    } else if (typeof dest[p] !== 'object' || dest[p] === null) {
-      dest[p] = mergeDeep(isArray(src[p].constructor) ? [] : {}, src[p]);
-    } else {
-      mergeDeep(dest[p], src[p]);
-    }
-  }
-  return dest;
 }
 
 export function unique<T>(values: T[], f: (item: T) => string | number): T[] {

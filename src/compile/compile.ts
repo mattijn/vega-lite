@@ -1,25 +1,27 @@
-import {Spec as VgSpec, LoggerInterface} from 'vega';
+import {LoggerInterface, Spec as VgSpec} from 'vega';
+import {mergeConfig} from 'vega-util';
+import {getPositionScaleChannel} from '../channel';
 import * as vlFieldDef from '../channeldef';
 import {Config, initConfig, stripAndRedirectConfig} from '../config';
 import * as log from '../log';
 import {normalize} from '../normalize/index';
 import {LayoutSizeMixins, TopLevel, TopLevelSpec} from '../spec';
 import {
+  AutoSizeParams,
   Datasets,
   extractTopLevelProperties,
-  TopLevelProperties,
   getFitType,
+  isFitType,
   normalizeAutoSize,
-  AutoSizeParams
+  TopLevelProperties
 } from '../spec/toplevel';
-import {keys, mergeDeep} from '../util';
+import {keys} from '../util';
 import {buildModel} from './buildmodel';
 import {assembleRootData} from './data/assemble';
-// import {draw} from './data/debug';
 import {optimizeDataflow} from './data/optimize';
 import {Model} from './model';
-import {getPositionScaleChannel} from '../channel';
-import {isFitType} from '../spec/toplevel';
+
+// import {draw} from './data/debug';
 
 export interface CompileOptions {
   config?: Config;
@@ -69,7 +71,7 @@ export function compile(inputSpec: TopLevelSpec, opt: CompileOptions = {}) {
 
   try {
     // 1. Initialize config by deep merging default config with the config provided via option and the input spec.
-    const config = initConfig(mergeDeep({}, opt.config, inputSpec.config));
+    const config = initConfig(mergeConfig(opt.config, inputSpec.config));
 
     // 2. Normalize: Convert input spec -> normalized spec
 

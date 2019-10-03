@@ -1,7 +1,7 @@
+import {mergeDeep} from 'vega-util';
 import {FilterInvalidNode} from '../../../src/compile/data/filterinvalid';
 import {UnitModel} from '../../../src/compile/unit';
 import {NormalizedUnitSpec, TopLevel} from '../../../src/spec';
-import {mergeDeep} from '../../../src/util';
 import {parseUnitModelWithScale} from '../../util';
 
 function parse(model: UnitModel) {

@@ -1,3 +1,4 @@
+import {mergeDeep} from 'vega-util';
 import {
   Data,
   isGenerator,
@@ -31,7 +32,7 @@ import {
   isTimeUnit,
   isWindow
 } from '../../transform';
-import {deepEqual, mergeDeep} from '../../util';
+import {deepEqual} from '../../util';
 import {isFacetModel, isLayerModel, isUnitModel, Model} from '../model';
 import {requiresSelectionId} from '../selection';
 import {AggregateNode} from './aggregate';
